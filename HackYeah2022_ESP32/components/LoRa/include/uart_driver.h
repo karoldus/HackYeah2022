@@ -1,6 +1,8 @@
 #ifndef __UART_DRIVER_H__
 #define __UART_DRIVER_H__
 
+#include <string.h>
+
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/event_groups.h"
@@ -12,6 +14,7 @@
 #include "esp_event.h"
 
 #define UART_FREE_BIT BIT0
+#define NETWORK_JOINED_BIT BIT1
 
 void uart_driver_tx_task(void *arg);
 

@@ -42,6 +42,7 @@ void uart_driver_tx_task(void *arg)
 void uart_driver_rx_task(void *arg)
 {
     static const char *RX_TASK_TAG = "RX_TASK";
+    ESP_LOGI(RX_TASK_TAG, "uart_driver_rx_task created!");
     esp_log_level_set(RX_TASK_TAG, ESP_LOG_INFO);
     uint8_t* data = (uint8_t*) malloc(RX_BUF_SIZE+1);
     while (1) {
@@ -50,7 +51,17 @@ void uart_driver_rx_task(void *arg)
             data[rxBytes] = 0;
             ESP_LOGI(RX_TASK_TAG, "Read %d bytes: '%s'", rxBytes, data);
             ESP_LOG_BUFFER_HEXDUMP(RX_TASK_TAG, data, rxBytes, ESP_LOG_INFO);
-            xEventGroupSetBits(uart_driver_event_group, UART_FREE_BIT);
+
+            // If modem is not busy, set UART_FREE_BIT
+            if (strcmp("Network joined", (const char*)data) == 0)
+            {
+                xEventGroupSetBits(uart_driver_event_group, NETWORK_JOINED_BIT);
+            }
+            else 
+            {
+                ESP_LOGI(RX_TASK_TAG, "Modem is not busy!");
+                xEventGroupSetBits(uart_driver_event_group, UART_FREE_BIT);
+            }
         }
     }
     free(data);

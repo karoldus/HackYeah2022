@@ -3,6 +3,14 @@
 
 #include "esp_err.h"
 
-esp_err_t lora_send_data(char *payload, size_t payload_size);
+esp_err_t lora_configure(void);
+
+esp_err_t lora_init(void);
+
+esp_err_t lora_join(void);
+
+esp_err_t lora_send_data(char *payload);
+
+esp_err_t lora_send_data_hex(char *payload);
 
 #endif
