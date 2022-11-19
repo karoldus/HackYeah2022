@@ -6,8 +6,8 @@
 #include "driver/gpio.h"
 #include "esp_err.h"
 
-esp_err_t flame_sensor_init();
+esp_err_t flame_sensor_init(void);
 
-void test_task(void *arg);
+esp_err_t flame_sensor_read(void);
 
 #endif

@@ -10,13 +10,11 @@ void app_main(void)
     set_MQ2_adc();
     while (1)
     {
-
         moisture = get_ms_moisture();
         printf("Moisture in mV : %d\r\n",moisture);
         vTaskDelay(pdMS_TO_TICKS(1000));
         smoke = get_MQ2_smoke();
         printf("Smoke in mV : %d\r\n",smoke);
         vTaskDelay(pdMS_TO_TICKS(1000));
-
     }
 }
