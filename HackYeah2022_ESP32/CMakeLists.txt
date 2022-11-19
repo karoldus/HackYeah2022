@@ -9,7 +9,6 @@ set(EXTRA_COMPONENT_DIRS components/DHT22)
 set(EXTRA_COMPONENT_DIRS components/flame_sensor)
 set(EXTRA_COMPONENT_DIRS components/LoRa)
 set(EXTRA_COMPONENT_DIRS components/Moisture_sensor)
-
 set(EXTRA_COMPONENT_DIRS components/MQ2)
 
 
