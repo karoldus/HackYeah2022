@@ -8,4 +8,7 @@ include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
 set(EXTRA_COMPONENT_DIRS components/Moisture_sensor)
 
+set(EXTRA_COMPONENT_DIRS components/MQ2)
+
+
 project(HackYeah2022_ESP32)
