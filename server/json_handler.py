@@ -31,12 +31,6 @@ def keys_read(key):
         data = json.load(read_file)
         return data[key]
 
-# def devices_read():
-
-#     with open("devices.json", "r") as read_file:
-#         data = json.load(read_file)
-#         return data["dev_list"]
-
 
 def measurements_add(device_id, value):
 

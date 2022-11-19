@@ -2,7 +2,7 @@ import logging
 import signal
 import json
 import json_handler
-from time import sleep
+import time
 import paho.mqtt.client as mqtt
 import base64
 
@@ -28,61 +28,34 @@ def analyze_message(msg):
 
     splitted_topic = topic.split('/')
 
-    extracted_data = {}
 
-    extracted_data['dev_id'] = splitted_topic[3]
+    dev_id = splitted_topic[3]
+    devices = list(json_handler.measurements_read().keys())
+
+    if dev_id not in devices:
+        print("No device", dev_id)
+        return
    
 
     if 'up' in splitted_topic[-1]: # uplink in TTS
-        extracted_data["message_type"] = 'uplink'
         
         raw_m = payload['uplink_message']['frm_payload']
         bytes_m = base64.b64decode(raw_m.encode())
-        # int_m = int.from_bytes(bytes_m, byteorder='big')
+        payload_str = bytes_m.decode("utf-8")
 
-        # #payload to list of ints (1 element = 1 byte)
-        # tab_m = []
-        # while int_m > 0:
-        #     tab_m.insert(0,int_m%256)
-        #     int_m = int(round(int_m / 256, 0))
+        values = payload_str.split(",")
 
+        moisture = int(values[0])
+        smoke = int(values[1])
+        flame = int(values[2])
+        temperature = float(values[3])
+        humidity = float(values[4])
 
-        # UP_ORDER = {1: ['ambient_temp', 1], 2: ['sky_temp', 1]}
+        print("Values", moisture, "|", smoke, "|", flame, "|", temperature, "|", humidity)
 
-        # fields = tab_m.pop(0)
+        record = {"time" : round(time.time()), "moisture" : moisture, "smoke" : smoke, "flame" : flame, "temperature" : temperature, "humidity" : humidity}
 
-        # for i in range(1,9):
-        #     if (fields & (1 << (i-1))): # if i byte in payload is not empty
-        #         if i in UP_ORDER.keys(): # if i in list of uplink elements
-        #             t = 0
-        #             e = UP_ORDER[i]
-        #             for j in range(e[1]):
-        #                 t = t + tab_m.pop(0)
-        #             extracted_data[e[0]] = t
-
-        # if 'ambient_temp' in extracted_data.keys():
-        #     extracted_data['ambient_temp'] = extracted_data['ambient_temp'] - 100
-
-        # if 'sky_temp' in extracted_data.keys():
-        #     extracted_data['sky_temp'] = extracted_data['sky_temp'] - 100
-
-        # if 'ambient_temp' in extracted_data.keys() and 'sky_temp' in extracted_data.keys():
-        #     extracted_data['delta_temp'] = extracted_data['ambient_temp'] - extracted_data['sky_temp']
-        #     if extracted_data['delta_temp'] < 10:
-        #         extracted_data['status'] = 3
-        #     elif extracted_data['delta_temp'] < 25:
-        #         extracted_data['status'] = 2
-        #     elif extracted_data['delta_temp'] < 40:
-        #         extracted_data['status'] = 1
-        #     else:
-        #         extracted_data['status'] = 0
-
-        #     db.send_data_to_influxdb(extracted_data)
-        
-        # print(extracted_data)      
-        # return extracted_data
-    else:
-        return {}
+        json_handler.measurements_add(dev_id, record)
 
     
 
