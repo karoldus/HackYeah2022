@@ -1,14 +1,6 @@
 from fastapi import FastAPI
+import json_handler
 
-devices = [
-    {"id" : 1, "lat" : 50.078179, "long" : 19.9486106},
-    {"id" : 2, "lat" : 50.456787, "long" : 19.8888888}
-]
-
-last_measurment_history = [
-    {"id" : 1, "time" : 1668879619, "temperature" : 30, "humidity" : 50},
-    {"id" : 2, "time" : 1668879555, "temperature" : 20, "humidity" : 70}
-]
 
 app = FastAPI()
 
@@ -22,16 +14,37 @@ def data_types():
 def last_measurement(param):
 
     output_tab = []
+
+    measurment_history = json_handler.measurements_read()
     
     if(param == "temperature"):
-        for i in last_measurment_history:
-            output_tab.append({"id" : i["id"], "time" : i["time"], "value" : i["temperature"]})
+        for device_id in measurment_history:
+            history_obj = measurment_history[device_id]["history"]
+            output_tab.append({"id" : device_id, "lat" : measurment_history[device_id]["lat"],
+            "long" : measurment_history[device_id]["long"], 
+            "time" : history_obj[-1]["time"], "value" : history_obj[-1]["temperature"]})
         return {"devices" : output_tab}
 
     elif param == "humidity":
-        for i in last_measurment_history:
-            output_tab.append({"id" : i["id"], "time" : i["time"], "value" : i["humidity"]})
+        for i in measurment_history:
+            history_obj = measurment_history[device_id]["history"]
+            output_tab.append({"id" : device_id, "lat" : measurment_history[device_id]["lat"],
+            "long" : measurment_history[device_id]["long"], 
+            "time" : history_obj[-1]["time"], "value" : history_obj[-1]["humidity"]})
         return {"devices" : output_tab}
 
+    else:
+        return {}
+
+
+@app.get("/{device_id}/measurement")
+def last_measurement(device_id):
+
+    output_tab = []
+
+    measurment_history = json_handler.measurements_read()
+    
+    if device_id in measurment_history:
+        return {"history" : measurment_history[device_id]["history"]}
     else:
         return {}

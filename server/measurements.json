@@ -1,0 +1,20 @@
+{
+    "devices" : {
+        "1" : {
+            "lat" : 50.078179, 
+            "long" : 19.9486106,
+            "history" : [
+            {"time" : 1668879619, "temperature" : 30, "humidity" : 50},
+            {"time" : 1668879555, "temperature" : 20, "humidity" : 70}
+            ]
+        }, 
+        "2" : {
+            "lat" : 50.456787, 
+            "long" : 19.8888888,
+            "history" : [
+            {"time" : 1668879611, "temperature" : 35, "humidity" : 55},
+            {"time" : 1668879557, "temperature" : 25, "humidity" : 75}
+            ]
+        }
+    }
+}
