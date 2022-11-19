@@ -1,0 +1,6 @@
+{
+    "BROKER_HOST" : "eu1.cloud.thethings.network", 
+    "BROKER_PORT" : 1883,
+    "CLIENT_ID" : "karolraspidscdc",
+    "TOPIC_BASE" : "v3/happy-forest-hackyeah@ttn/devices"
+}
