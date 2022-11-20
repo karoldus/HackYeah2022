@@ -58,57 +58,30 @@ void app_main(void)
     bool flame;
     float temperature;
     float humidity;
-    char buf[30] = {" "};
     while (1)
     {
 
         moisture = get_ms_moisture();
         printf("Moisture in mV : %d\r\n", moisture);
-        for (int i = 0; i < 30; i++)
-        {
-            buf[i] = " ";
-        }
-        sprintf(buf, "\"moisture\":%d", (int)moisture);
-        // lora_send_data(buf);
-        vTaskDelay(pdMS_TO_TICKS(SLEEP_DELAY / portTICK_PERIOD_MS));
 
         smoke = get_MQ2_smoke();
         printf("Smoke in mV : %d\r\n", smoke);
-        for (int i = 0; i < 30; i++)
-        {
-            buf[i] = " ";
-        }
-        sprintf(buf, "\"smoke\":%d\r\n", (int)smoke);
-        // lora_send_data(buf);
-        vTaskDelay(pdMS_TO_TICKS(SLEEP_DELAY / portTICK_PERIOD_MS));
 
         flame = flame_sensor_read();
         printf("Flame: %d\r\n", flame);
-        for (int i = 0; i < 30; i++)
-        {
-            buf[i] = " ";
-        }
-        sprintf(buf, "\"flame\":%d\r\n", (int)flame);
-        // lora_send_data(buf);
-        vTaskDelay(pdMS_TO_TICKS(SLEEP_DELAY / portTICK_PERIOD_MS));
 
         temperature = getTemperature();
-        // snprintf(temperature_buf, TEMP_HUM_BUF_SIZE, "%.1f C", temperature);
         printf("Temperature: %.1f C\r\n", temperature);
-        // lora_send_data(temperature);
-        vTaskDelay(pdMS_TO_TICKS(SLEEP_DELAY / portTICK_PERIOD_MS));
 
         humidity = getHumidity();
-        // snprintf(humidity_buf, TEMP_HUM_BUF_SIZE, "%.1f %%", humidity);
         printf("Humidity: %1.f %%\r\n", humidity);
-        // lora_send_data(humidity);
-        vTaskDelay(pdMS_TO_TICKS(SLEEP_DELAY / portTICK_PERIOD_MS));
 
         tx_buffer = malloc(LORA_TX_BUFFER_SIZE * sizeof(char));
         prepare_the_message(tx_buffer, moisture, smoke, flame, temperature, humidity);
         printf("Data to send: %s\n", tx_buffer);
         lora_send_data(tx_buffer);
         free(tx_buffer);
+        
         vTaskDelay(pdMS_TO_TICKS(SLEEP_DELAY / portTICK_PERIOD_MS));
     }
 }
