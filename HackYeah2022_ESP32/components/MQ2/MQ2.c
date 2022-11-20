@@ -19,7 +19,7 @@ static const adc_bits_width_t width = ADC_WIDTH_BIT_12;
 
 static const adc_atten_t atten = ADC_ATTEN_DB_0;
 static const adc_unit_t unit = ADC_UNIT_1;
- 
+    
 
  
  
@@ -37,6 +37,7 @@ void set_MQ2_adc(void)
     //Characterize ADC
     adc_chars = calloc(1, sizeof(esp_adc_cal_characteristics_t));
     esp_adc_cal_value_t val_type = esp_adc_cal_characterize(unit, atten, width, DEFAULT_VREF, adc_chars);
+    (void)val_type;
 }
 
 
