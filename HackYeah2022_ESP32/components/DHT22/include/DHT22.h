@@ -12,6 +12,8 @@
 #define DHT_CHECKSUM_ERROR -1
 #define DHT_TIMEOUT_ERROR -2
 
+#define DHT_DATA_PIN 19
+
 // == function prototypes =======================================
 
 void 	setDHTgpio(int gpio);
