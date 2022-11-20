@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+#include "esp_sleep.h"
+
 #include "moisture.h"
 #include "MQ2.h"
 #include "DHT22.h"
@@ -81,7 +83,9 @@ void app_main(void)
         printf("Data to send: %s\n", tx_buffer);
         lora_send_data(tx_buffer);
         free(tx_buffer);
-        
-        vTaskDelay(pdMS_TO_TICKS(SLEEP_DELAY / portTICK_PERIOD_MS));
+
+        esp_sleep_enable_timer_wakeup(SLEEP_DELAY);
+        esp_deep_sleep_start();
+        // vTaskDelay(pdMS_TO_TICKS(SLEEP_DELAY / portTICK_PERIOD_MS));
     }
 }
