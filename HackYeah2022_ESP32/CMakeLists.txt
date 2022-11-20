@@ -11,6 +11,7 @@ set(EXTRA_COMPONENT_DIRS components/LoRa)
 set(EXTRA_COMPONENT_DIRS components/Moisture_sensor)
 set(EXTRA_COMPONENT_DIRS components/Beacon)
 set(EXTRA_COMPONENT_DIRS components/MQ2)
+set(EXTRA_COMPONENT_DIRS components/BLE_driver)
 
 
 project(HackYeah2022_ESP32)
