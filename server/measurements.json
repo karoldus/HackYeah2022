@@ -1,0 +1,56 @@
+{
+    "devices": {
+        "eui-70b3d57ed0057a60": {
+            "lat": 50.078179,
+            "long": 19.9486106,
+            "history": [
+                {
+                    "time": 1668900714,
+                    "moisture": 11,
+                    "smoke": 12,
+                    "flame": 1,
+                    "temperature": 12.3,
+                    "humidity": 23.4
+                },
+                {
+                    "time": 1668901090,
+                    "moisture": 11,
+                    "smoke": 12,
+                    "flame": 1,
+                    "temperature": 12.3,
+                    "humidity": 23.4
+                },
+                {
+                    "time": 1668901110,
+                    "moisture": 11,
+                    "smoke": 12,
+                    "flame": 1,
+                    "temperature": 12.3,
+                    "humidity": 23.4
+                }
+            ]
+        },
+        "2": {
+            "lat": 50.456787,
+            "long": 19.8888888,
+            "history": [
+                {
+                    "time": 1668901010,
+                    "moisture": 10,
+                    "smoke": 17,
+                    "flame": 0,
+                    "temperature": 12.3,
+                    "humidity": 23.4
+                },
+                {
+                    "time": 1668901110,
+                    "moisture": 15,
+                    "smoke": 15,
+                    "flame": 0,
+                    "temperature": 15.3,
+                    "humidity": 25.4
+                }
+            ]
+        }
+    }
+}

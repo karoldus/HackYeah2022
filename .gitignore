@@ -1,2 +1,7 @@
 .vscode
 build
+
+server/venv/*
+server/__pycache__/*
+
+server_old/*
