@@ -5,4 +5,13 @@
 cmake_minimum_required(VERSION 3.5)
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
+set(EXTRA_COMPONENT_DIRS components/DHT22)
+set(EXTRA_COMPONENT_DIRS components/flame_sensor)
+set(EXTRA_COMPONENT_DIRS components/LoRa)
+set(EXTRA_COMPONENT_DIRS components/Moisture_sensor)
+set(EXTRA_COMPONENT_DIRS components/Beacon)
+set(EXTRA_COMPONENT_DIRS components/MQ2)
+set(EXTRA_COMPONENT_DIRS components/BLE_driver)
+
+
 project(HackYeah2022_ESP32)
