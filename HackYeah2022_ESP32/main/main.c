@@ -8,7 +8,7 @@
 #include "uart_driver.h"
 #include "lora.h"
 #include "flame_sensor.h"
-#include "ble_beacon_scanner.h"
+#include "ble_driver.h"
 
 #define SLEEP_DELAY 100000
 #define LORA_TX_BUFFER_SIZE 1024
@@ -24,17 +24,15 @@ static esp_err_t sensors_init(void)
     flame_sensor_init();
     setDHTgpio(DHT_DATA_PIN);
 
-    init_ble_beacon_scan();
-
     return ESP_OK;
 }
 
 static esp_err_t prepare_the_message(char *buffer,
-                                        int moisture,
-                                        int smoke, 
-                                        bool flame,
-                                        float temperature,
-                                        float humidity)
+                                     int moisture,
+                                     int smoke,
+                                     bool flame,
+                                     float temperature,
+                                     float humidity)
 {
     sprintf(buffer, "%d,%d,%d,%.1f,%.1f", moisture, smoke, flame, temperature, humidity);
 
@@ -43,6 +41,7 @@ static esp_err_t prepare_the_message(char *buffer,
 
 void app_main(void)
 {
+    ble_driver_start();
     sensors_init();
     uart_driver_init();
     if (lora_init() == ESP_OK)
@@ -62,7 +61,6 @@ void app_main(void)
     float humidity;
     while (1)
     {
-
         moisture = get_ms_moisture();
         printf("Moisture in mV : %d\r\n", moisture);
 
@@ -84,8 +82,8 @@ void app_main(void)
         lora_send_data(tx_buffer);
         free(tx_buffer);
 
-        esp_sleep_enable_timer_wakeup(SLEEP_DELAY);
-        esp_deep_sleep_start();
-        // vTaskDelay(pdMS_TO_TICKS(SLEEP_DELAY / portTICK_PERIOD_MS));
+        // esp_sleep_enable_timer_wakeup(SLEEP_DELAY);
+        // esp_deep_sleep_start();
+        vTaskDelay(pdMS_TO_TICKS(SLEEP_DELAY / portTICK_PERIOD_MS));
     }
 }
