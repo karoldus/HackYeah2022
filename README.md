@@ -9,3 +9,7 @@ We help foresters remotely take care of their forests by a net of devices with s
 # Server - Python
 - MQTT paho client subscribing messages from The Things Network and saving payload (data from sensors)
 - FastAPI server loading data and exposing URLs for forester webapp
+
+# Frontend - webapp for forester
+- based Svelte
+- data for forester
