@@ -9,12 +9,11 @@
 #include "ble_beacon_scanner.h"
 
 #define SLEEP_DELAY 100000
-#define JSON_TX_BUFFER_SIZE 1024
-#define TEMP_HUM_BUF_SIZE 20
+#define LORA_TX_BUFFER_SIZE 1024
 
 static const char *TAG = "MAIN";
 
-//static char json_tx_buffer[JSON_TX_BUFFER_SIZE];
+char *tx_buffer;
 
 static esp_err_t sensors_init(void)
 {
@@ -22,27 +21,23 @@ static esp_err_t sensors_init(void)
     set_MQ2_adc();
     flame_sensor_init();
     setDHTgpio(DHT_DATA_PIN);
-    
+
     init_ble_beacon_scan();
 
     return ESP_OK;
 }
 
-// static void prepare_the_json_data(char *buffer,
-//                                     int buffer_size,
-//                                     uint32_t moisture,
-//                                     uint32_t smoke, 
-//                                     bool flame,
-//                                     char *temperature,
-//                                     char *humidity)
-// {
-//     snprintf(buffer, buffer_size, "{\"moisture\": %d, \"smoke\": %d, \"flame\": %d, \"temperature\": \"%s\", \"humidity\": \"%s\"}",
-//                 moisture,
-//                 smoke,
-//                 flame,
-//                 temperature,
-//                 humidity);
-// }
+static esp_err_t prepare_the_message(char *buffer,
+                                        int moisture,
+                                        int smoke, 
+                                        bool flame,
+                                        float temperature,
+                                        float humidity)
+{
+    sprintf(buffer, "%d,%d,%d,%.1f,%.1f", moisture, smoke, flame, temperature, humidity);
+
+    return ESP_OK;
+}
 
 void app_main(void)
 {
@@ -62,64 +57,58 @@ void app_main(void)
     uint32_t smoke;
     bool flame;
     float temperature;
-    char temperature_buf[TEMP_HUM_BUF_SIZE];
     float humidity;
-    char humidity_buf[TEMP_HUM_BUF_SIZE];
     char buf[30] = {" "};
-     while (1)
+    while (1)
     {
-       
-        
+
         moisture = get_ms_moisture();
-        //moisture = 0;
         printf("Moisture in mV : %d\r\n", moisture);
-        for(int i = 0; i<30;i++)
+        for (int i = 0; i < 30; i++)
         {
-                buf[i]=" ";
+            buf[i] = " ";
         }
-        sprintf(buf,"\"moisture\":%d",(int)moisture);
-        lora_send_data(buf);
+        sprintf(buf, "\"moisture\":%d", (int)moisture);
+        // lora_send_data(buf);
         vTaskDelay(pdMS_TO_TICKS(SLEEP_DELAY / portTICK_PERIOD_MS));
 
-
         smoke = get_MQ2_smoke();
-        //smoke = 0;
         printf("Smoke in mV : %d\r\n", smoke);
-        for(int i = 0; i<30;i++)
+        for (int i = 0; i < 30; i++)
         {
-                buf[i]=" ";
+            buf[i] = " ";
         }
-        sprintf(buf,"\"smoke\":%d\r\n",(int)smoke);
-        lora_send_data(buf);
+        sprintf(buf, "\"smoke\":%d\r\n", (int)smoke);
+        // lora_send_data(buf);
         vTaskDelay(pdMS_TO_TICKS(SLEEP_DELAY / portTICK_PERIOD_MS));
 
         flame = flame_sensor_read();
         printf("Flame: %d\r\n", flame);
-        for(int i = 0; i<30;i++)
+        for (int i = 0; i < 30; i++)
         {
-                buf[i]=" ";
+            buf[i] = " ";
         }
-        sprintf(buf,"\"flame\":%d\r\n",(int)flame);
-        lora_send_data(buf);
+        sprintf(buf, "\"flame\":%d\r\n", (int)flame);
+        // lora_send_data(buf);
         vTaskDelay(pdMS_TO_TICKS(SLEEP_DELAY / portTICK_PERIOD_MS));
 
         temperature = getTemperature();
-        snprintf(temperature_buf, TEMP_HUM_BUF_SIZE, "%.1f C", temperature);
-        printf("temperature:%s\r\n", temperature_buf);
-        lora_send_data(temperature_buf);
+        // snprintf(temperature_buf, TEMP_HUM_BUF_SIZE, "%.1f C", temperature);
+        printf("Temperature: %.1f C\r\n", temperature);
+        // lora_send_data(temperature);
         vTaskDelay(pdMS_TO_TICKS(SLEEP_DELAY / portTICK_PERIOD_MS));
 
         humidity = getHumidity();
-        snprintf(humidity_buf, TEMP_HUM_BUF_SIZE, "%.1f %%", humidity);
-        printf("Humidity: %s\r\n", humidity_buf);
-        lora_send_data(humidity_buf);
+        // snprintf(humidity_buf, TEMP_HUM_BUF_SIZE, "%.1f %%", humidity);
+        printf("Humidity: %1.f %%\r\n", humidity);
+        // lora_send_data(humidity);
         vTaskDelay(pdMS_TO_TICKS(SLEEP_DELAY / portTICK_PERIOD_MS));
-        //prepare_the_json_data(json_tx_buffer, JSON_TX_BUFFER_SIZE, moisture, smoke, flame, temperature_buf, humidity_buf);
 
-       // printf("Data to send: %s\r\n", json_tx_buffer);
-        // lora_send_data(json_tx_buffer);
-
-        //lora_send_data(temperature_buf);
-
+        tx_buffer = malloc(LORA_TX_BUFFER_SIZE * sizeof(char));
+        prepare_the_message(tx_buffer, moisture, smoke, flame, temperature, humidity);
+        printf("Data to send: %s\n", tx_buffer);
+        lora_send_data(tx_buffer);
+        free(tx_buffer);
+        vTaskDelay(pdMS_TO_TICKS(SLEEP_DELAY / portTICK_PERIOD_MS));
     }
 }
