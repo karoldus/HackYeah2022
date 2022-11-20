@@ -5,11 +5,12 @@ We help foresters remotely take care of their forests by a net of devices with s
 - using esp-idf
 - taking measurements from temperature, humidity, flame, smoke and moisture sensors
 - sending data using LoRaWAN to The Things Network
+- scanning environment for BLE beacons
 
 # Server - Python
 - MQTT paho client subscribing messages from The Things Network and saving payload (data from sensors)
 - FastAPI server loading data and exposing URLs for forester webapp
 
 # Frontend - webapp for forester
-- based Svelte
+- based on Svelte
 - data for forester
